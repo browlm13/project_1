@@ -29,17 +29,18 @@ const double PI = 3.145926535;
 // File Names and Settings
 
 // [TODO]: Fix this F I/O stuff
-const string LOG_FNAME = "../output/shallow_water_log.txt";
-const string X_FNAME = "../output/xs.csv";
-const string Y_FNAME = "../output/ys.csv";
-const string TIMESTEP_FPREFIX = "../output/timesteps/";
+const string LOG_FNAME = "../output_1/shallow_water_log.txt";
+const string X_FNAME = "../output_1/xs.csv";
+const string Y_FNAME = "../output_1/ys.csv";
+const string TIMESTEP_FPREFIX = "../output_1/timesteps/";
 const string TIMESTEP_FEXTENSION = ".csv";
 
-const int N_FRAMES = 1500;
+const int N_FRAMES = 500;
+const bool SILENCE_FRAMES = 1;
 
 ////
 // CFL Condition
-const double CFL = 0.00001;
+const double CFL = 0.01;
 
 /////
 // Mesh Settings
@@ -53,12 +54,12 @@ const double MIN_Y = 0.0;
 const double MAX_Y = PI/2;
 
 const double MIN_T = 0.0;
-const double MAX_T = 10;
+const double MAX_T = 10.0;
 
 // Mesh Size -- x,y
 
-const int NX = 100;
-const int NY = 100;
+const int NX = 200;
+const int NY = 200;
 
 /////
 // Forcing Function Settings
@@ -80,8 +81,8 @@ double fv(double t, double x, double y){
 // Wave Speed
 
 double c(double x, double y){				// <cmath> for cos, pow
-	return 1.0;
-	//return 0.75 + pow(cos(2*PI*x), 2)*pow(cos(PI*y), 2); //max speed (1.75)
+	//return 1.0;
+	return 0.75 + pow(cos(2*PI*x), 2)*pow(cos(PI*y), 2); //max speed (1.75)
 }
 
 /////
@@ -187,14 +188,16 @@ bool write_xy_data(double (& xs_ref) [NX], double (& ys_ref) [NY]){
 }
 
 // [TODO]: Fix this code alot
-bool write_timestep(int time_iterator, double t, double (& H_ref) [NX][NY]){
+bool write_timestep(int frame_iterator, double t, double (& H_ref) [NX][NY]){
 
 	// Write xs 
 	//
-	string timestep_fname = TIMESTEP_FPREFIX + to_string(time_iterator) + TIMESTEP_FEXTENSION;
+	string timestep_fname = TIMESTEP_FPREFIX + to_string(frame_iterator) + TIMESTEP_FEXTENSION;
 	
 	// console output
-	cout << timestep_fname << endl;
+	if (!SILENCE_FRAMES){
+		cout << timestep_fname << endl;
+	}
 
 	ofstream Ht_file (timestep_fname);
 
@@ -215,8 +218,10 @@ bool write_timestep(int time_iterator, double t, double (& H_ref) [NX][NY]){
 			Ht_file << t << "\n";
 		}
 		Ht_file.close();
-		cout << "Wrote time step: " << time_iterator << ", t = " << t << ". " << endl;
 
+		if (!SILENCE_FRAMES){
+			cout << "Wrote time step: " << frame_iterator << ", t = " << t << ". " << endl;
+		}
 		return 0;
 	}	
 	else cout << "Problem Writing Time Step to file.";
@@ -328,15 +333,9 @@ int main(){
 
 	//find dt and nt
 	double dt = (lambda(delta, MIN_X, MIN_Y) + lambda(delta, MAX_X, MAX_Y))/2; //[TODO]: Should be max c(mesh) 
-	int nt = (MAX_T - MIN_T)/dt;
+	int nt = (MAX_T - MIN_T)/dt/2;
 
 	cout << "Total number of time steps to run: " << nt << endl;
-
-	////
-	// Determine Write Frequency
-	int WRITE_FREQUENCY = nt / N_FRAMES;
-
-	cout << "Write Frequency: " << WRITE_FREQUENCY << endl;
 
 	////
 	// Initilize Matrcies - Initilize Elements To Zero
@@ -360,12 +359,19 @@ int main(){
 	int t_iter = 2;
 
 	////
+	// Initilize Frame Counter to 0
+	int frame_iter = 0;
+
+	////
 	// For Testing Set Initial 2 Timesteps To True Solutions
 	double t = MIN_T;
 	shallow_water_solution(t, H_old, U_old, V_old, xs, ys);
 
 	// Write Intital Values to File
 	write_timestep(0, t, H_old);
+
+	// Increment Frame Counter
+	frame_iter += 1;
 
 	// increment t and take second timestep
 	t += dt;
@@ -376,7 +382,8 @@ int main(){
 
 	////
 	// Run
-	for (t_iter = t_iter; t_iter < nt-t_iter; t_iter+=1){
+	int completion = 0;
+	for (t_iter = t_iter; t_iter < nt*nt; t_iter+=1){
 		t += dt; 
 
 		// [TODO]: Make forcing funcintions a function of i and j -- precompute x and y values. -- and add to U and V
@@ -422,11 +429,28 @@ int main(){
 		}
 
 		/////
-		// write timestep to file
-
-		if (t_iter % WRITE_FREQUENCY == 0){
-			write_timestep(t_iter, t, H_new);
+		// Write Timestep to File and Display progress
+		int nc = N_FRAMES*(t/(MAX_T - MIN_T)); 
+		if ( nc > frame_iter){
+			write_timestep(frame_iter, t, H_new);
+			frame_iter += 1;
 		}
+
+		int pc = 100*(t/(MAX_T - MIN_T)); 
+		if ( pc > completion){
+
+			if (completion % 5 == 0){
+				cout << "t: " << t << endl;
+				cout << "Completion Percentage : " <<  pc << endl;
+			}
+			completion = pc;
+
+			if (completion >= 100){
+				cout << "Maximum time reached" << endl;
+				return 0;
+			}
+		}
+
 
 	}
 
