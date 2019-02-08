@@ -336,7 +336,7 @@ int main(){
 	// Determine Write Frequency
 	int WRITE_FREQUENCY = nt / N_FRAMES;
 
-	cout << WRITE_FREQUENCY << endl;
+	cout << "Write Frequency: " << WRITE_FREQUENCY << endl;
 
 	////
 	// Initilize Matrcies - Initilize Elements To Zero
