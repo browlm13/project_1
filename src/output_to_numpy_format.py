@@ -21,7 +21,8 @@ import glob
 #
 # Settings
 #
-TRIAL = 1
+
+TRIAL = 3
 
 HT_FOLDER_PATH = "../output_%s/timesteps/*.csv" % TRIAL
 XS_FPATH = "../output_%s/xs.csv" % TRIAL

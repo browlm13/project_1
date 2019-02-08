@@ -4,6 +4,7 @@
 
 	L.J. Brown
 	Parallel Scientific Computing 001C 1192 
+
 */
 
 ///////////////////////////////////////////////////////
@@ -14,8 +15,10 @@
 #include <string>
 #include <fstream>
 #include <cmath>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 ///////////////////////////////////////////////////////
 /////            
@@ -31,14 +34,18 @@ const double PI = 3.145926535;
 // File Names and Settings
 
 // [TODO]: Fix this F I/O stuff
-const string LOG_FNAME = "../output_2/shallow_water_log.txt";
-const string X_FNAME = "../output_2/xs.csv";
-const string Y_FNAME = "../output_2/ys.csv";
-const string TIMESTEP_FPREFIX = "../output_2/timesteps/";
+const string LOG_FNAME = "../output_3/shallow_water_log.txt";
+const string X_FNAME = "../output_3/xs.csv";
+const string Y_FNAME = "../output_3/ys.csv";
+const string TIMESTEP_FPREFIX = "../output_3/timesteps/";
 const string TIMESTEP_FEXTENSION = ".csv";
 
-const int N_FRAMES = 500;
+const int N_FRAMES = 200;
 const bool SILENCE_FRAMES = 1;
+
+////
+// Measure Convergence Rate Boolean If True Solution Provided
+const bool MEASURE_CONVERGENCE = 0;
 
 ////
 // CFL Condition
@@ -60,8 +67,8 @@ const double MAX_T = 10.0;
 
 // Mesh Size -- x,y
 
-const int NX = 200;
-const int NY = 200;
+const int NX = 100;
+const int NY = 100;
 
 /////
 // Forcing Function Settings
@@ -386,6 +393,18 @@ int main(){
 	int lrud [4] = {-1,-1,-1,-1};
 
 	////
+	// Begin Timer
+	high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+	/////
+	// If Measuring Convergence Rate Store Previous error
+	if (MEASURE_CONVERGENCE){
+		double prev_error = -1;
+		double cur_error = -1;
+	}
+
+
+	////
 	// Run
 	int completion = 0;
 	for (t_iter = t_iter; t_iter < nt*nt; t_iter+=1){
@@ -447,11 +466,37 @@ int main(){
 			if (completion % 5 == 0){
 				cout << "t: " << t << endl;
 				cout << "Completion Percentage : " <<  pc << endl;
+			
+				/*
+				// Measure Convergence Rate
+				if (MEASURE_CONVERGENCE){
+
+					// time error caluclation and subtract from total
+
+					if (prev_error == -1){
+						// compute true solution and current error and store result
+						//prev_error = get_error();
+					}
+					else {
+						// compute true solution and display local convergence rate
+						// cur_error = get_error();
+
+					}
+				}
+				*/
+
 			}
 			completion = pc;
 
+			// Stop Execution
 			if (completion >= 100){
+
+				// Display Program Total Execution Time
 				cout << "Maximum time reached" << endl;
+				high_resolution_clock::time_point t2 = high_resolution_clock::now();
+    			auto duration = duration_cast<microseconds>( t2 - t1 ).count();
+    			cout << "Execution Time: " << duration << endl;
+    			cout << "Quitting Program. " << endl;
 				return 0;
 			}
 		}
@@ -459,6 +504,10 @@ int main(){
 
 	}
 
-
+	// Display Program Total Execution Time
+	high_resolution_clock::time_point t2 = high_resolution_clock::now();
+	auto duration = duration_cast<microseconds>( t2 - t1 ).count();
+	cout << "Execution Time: " << duration << endl;
+	cout << "Quitting Program. " << endl;
 	return 0;
 }
