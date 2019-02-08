@@ -2,6 +2,8 @@
 
 					Shallow Water
 
+	L.J. Brown
+	Parallel Scientific Computing 001C 1192 
 */
 
 ///////////////////////////////////////////////////////
@@ -29,10 +31,10 @@ const double PI = 3.145926535;
 // File Names and Settings
 
 // [TODO]: Fix this F I/O stuff
-const string LOG_FNAME = "../output_1/shallow_water_log.txt";
-const string X_FNAME = "../output_1/xs.csv";
-const string Y_FNAME = "../output_1/ys.csv";
-const string TIMESTEP_FPREFIX = "../output_1/timesteps/";
+const string LOG_FNAME = "../output_2/shallow_water_log.txt";
+const string X_FNAME = "../output_2/xs.csv";
+const string Y_FNAME = "../output_2/ys.csv";
+const string TIMESTEP_FPREFIX = "../output_2/timesteps/";
 const string TIMESTEP_FEXTENSION = ".csv";
 
 const int N_FRAMES = 500;
@@ -65,8 +67,8 @@ const int NY = 200;
 // Forcing Function Settings
 
 double fh(double t, double x, double y){ 	// <cmath> for exp, pow
-	return 0.0;
-	//return exp(-15.0*pow((t-1.5),2));
+	//return 0.0;
+	return exp(-15.0*pow((t-1.5),2));
 }
 
 double fu(double t, double x, double y){
@@ -255,7 +257,8 @@ const double KT = sqrt(pow(KX,2) + pow(KY,2)); 		// <cmath> for sqrt, pow
 
 double h(double t, double x, double y){ 			// <cmath> for cos
 	// function of (t,x,y)
-	return cos(2*PI*KT*c(x,y) * t) * sin(2*PI*KX * x) * cos(2*PI*KY * y);
+	//return cos(2*PI*KT*c(x,y) * t) * sin(2*PI*KX * x) * cos(2*PI*KY * y);
+	return 0.0;
 }
 
 /////
@@ -263,12 +266,14 @@ double h(double t, double x, double y){ 			// <cmath> for cos
 
 double u(double t, double x, double y){				// <cmath> for sin, cos, pow
 	// x component of velocity, function of (t,x,y)
-	return pow(c(x,y),2)*(KX/KT) * cos(2*PI*KT * t) * sin(2*PI*KX * x) * cos(2*PI*KY * y);
+	//return pow(c(x,y),2)*(KX/KT) * cos(2*PI*KT * t) * sin(2*PI*KX * x) * cos(2*PI*KY * y);
+	return 0.0;
 }
 
 // y component of velocity, function of (t,x,y)
 double v(double t, double x, double y){				// <cmath> for sin, cos, pow
-	return pow(c(x,y),2)*(KX/KT) * cos(2*PI*KT * t) * cos(2*PI*KX * x) * sin(2*PI*KY * y);
+	//return pow(c(x,y),2)*(KX/KT) * cos(2*PI*KT * t) * cos(2*PI*KX * x) * sin(2*PI*KY * y);
+	return 0.0;
 }
 
 /////

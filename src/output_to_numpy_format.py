@@ -2,8 +2,15 @@
 
 """
 
+					Shallow Water
+
+
 	Read badly formated time step matrices
 	from shallow water output into numpy arrays
+	and then save 3d animation as .mp4 file
+
+	L.J. Brown
+	Parallel Scientific Computing 001C 1192 
 
 """
 
