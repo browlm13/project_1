@@ -57,8 +57,8 @@ const double MAX_T = 10;
 
 // Mesh Size -- x,y
 
-const int NX = 200;
-const int NY = 200;
+const int NX = 100;
+const int NY = 100;
 
 /////
 // Forcing Function Settings
@@ -329,6 +329,8 @@ int main(){
 	//find dt and nt
 	double dt = (lambda(delta, MIN_X, MIN_Y) + lambda(delta, MAX_X, MAX_Y))/2; //[TODO]: Should be max c(mesh) 
 	int nt = (MAX_T - MIN_T)/dt;
+
+	cout << "Total number of time steps to run: " << nt << endl;
 
 	////
 	// Determine Write Frequency
