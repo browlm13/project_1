@@ -11,6 +11,8 @@
 
 #SBATCH --mail-user lmbrown@smu.edu
 #SBATCH --mail-type=all
+#SBATCH --mail-type=begin
+#SBATCH --mail-type=end
 
 cd src
 ./sw.x
