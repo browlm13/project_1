@@ -17,7 +17,7 @@ OUTPUT_DIR=$1
 #SBATCH --mem=7G            # memory requirment
 #SBATCH -t 180         		# kill time
 
-#SBATCH --mail-user lmbrown@smu.edu
+#SBATCH --mail-user browlm13@gmail.com
 #SBATCH --mail-type=all
 
 #
