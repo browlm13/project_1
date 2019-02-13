@@ -49,7 +49,7 @@ const bool MEASURE_CONVERGENCE = 0;
 
 ////
 // CFL Condition
-const double CFL = 0.001;
+const double CFL = 0.0001;
 
 /////
 // Mesh Settings
