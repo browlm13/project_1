@@ -24,8 +24,9 @@ OUTPUT_DIR=$1
 # Dropped into '$PROJECT_DIR/output/' directory by slurn
 #
 
-# Change directory to '$PROJECT_DIR/src/'
-cd ../src
+# Change directory to '$PROJECT_DIR/src/' -- project_1
+#cd ../src
+cd /users/lmbrown/scratch/parallel_scientific_computing/project_1/src
 
 # Run python 'controller.py' script passing $OUTPUT_DIR as an argument, or executable directly 'srun sw.x' 
 
