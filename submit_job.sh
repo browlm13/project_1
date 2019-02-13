@@ -28,4 +28,7 @@ OUTPUT_DIR=$1
 cd ../src
 
 # Run python 'controller.py' script passing $OUTPUT_DIR as an argument, or executable directly 'srun sw.x' 
-srun sw.x
+
+# srun sw.x
+module load python
+python controller.py $OUTPUT_DIR
