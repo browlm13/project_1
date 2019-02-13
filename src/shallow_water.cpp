@@ -34,10 +34,10 @@ const double PI = 3.145926535;
 // File Names and Settings
 
 // [TODO]: Fix this F I/O stuff
-const string LOG_FNAME = "../output_3/shallow_water_log.txt";
-const string X_FNAME = "../output_3/xs.csv";
-const string Y_FNAME = "../output_3/ys.csv";
-const string TIMESTEP_FPREFIX = "../output_3/timesteps/";
+const string LOG_FNAME = "/shallow_water_log.txt";
+const string X_FNAME = "/xs.csv";
+const string Y_FNAME = "/ys.csv";
+const string TIMESTEP_FPREFIX = "/timesteps/";
 const string TIMESTEP_FEXTENSION = ".csv";
 
 const int N_FRAMES = 200;
@@ -160,10 +160,10 @@ bool write_log(string fname){
 }
 
 // [TODO]: Fix this code alot
-bool write_xy_data(double (& xs_ref) [NX], double (& ys_ref) [NY]){
+bool write_xy_data(double (& xs_ref) [NX], double (& ys_ref) [NY], string x_file_path, string y_file_path){
 
 	// Write xs 
-	ofstream xs_file (X_FNAME);
+	ofstream xs_file (x_file_path);
 
 	if (xs_file.is_open()) {
 	    for(int i = 0; i < NX; i ++) {
@@ -178,7 +178,7 @@ bool write_xy_data(double (& xs_ref) [NX], double (& ys_ref) [NY]){
 	}
 
 	// Write ys 
-	ofstream ys_file (Y_FNAME);
+	ofstream ys_file (y_file_path);
 
 	if (ys_file.is_open()) {
 	    for(int j = 0; j < NY; j ++) {
@@ -197,11 +197,11 @@ bool write_xy_data(double (& xs_ref) [NX], double (& ys_ref) [NY]){
 }
 
 // [TODO]: Fix this code alot
-bool write_timestep(int frame_iterator, double t, double (& H_ref) [NX][NY]){
+bool write_timestep(int frame_iterator, double t, double (& H_ref) [NX][NY], string output_directory){
 
 	// Write xs 
 	//
-	string timestep_fname = TIMESTEP_FPREFIX + to_string(frame_iterator) + TIMESTEP_FEXTENSION;
+	string timestep_fname = output_directory + TIMESTEP_FPREFIX + to_string(frame_iterator) + TIMESTEP_FEXTENSION;
 	
 	// console output
 	if (!SILENCE_FRAMES){
@@ -309,13 +309,20 @@ void shallow_water_solution(double t, double (& H_ref) [NX][NY], double (& U_ref
 ////
 ///////////////////////////////////////////////////////
 
-int main(){
+int main(int argc, char** argv){
+	// Takes output directory as argument
+	string output_directory = argv[1];
+
+	// create file paths
+	string log_file_path = output_directory + LOG_FNAME;
+	string x_file_path = output_directory + X_FNAME;
+	string y_file_path = output_directory + Y_FNAME;
 
 	// log/cout program start
 	cout << "Shallow Water" << endl;
 
 	/* Save basic input information */
-	write_log(LOG_FNAME);
+	write_log(log_file_path);
 
 	////
 	// Initilize x and y arrays, evenly spaced, and determine dx,dy and delta (the minimum)
@@ -341,7 +348,7 @@ int main(){
 
 	/////
 	// Write xs and ys to file
-	write_xy_data(xs, ys);
+	write_xy_data(xs, ys, x_file_path, y_file_path);
 
 	//find dt and nt
 	double dt = (lambda(delta, MIN_X, MIN_Y) + lambda(delta, MAX_X, MAX_Y))/2; //[TODO]: Should be max c(mesh) 
@@ -380,7 +387,7 @@ int main(){
 	shallow_water_solution(t, H_old, U_old, V_old, xs, ys);
 
 	// Write Intital Values to File
-	write_timestep(0, t, H_old);
+	write_timestep(0, t, H_old, output_directory);
 
 	// Increment Frame Counter
 	frame_iter += 1;
@@ -456,7 +463,7 @@ int main(){
 		// Write Timestep to File and Display progress
 		int nc = N_FRAMES*(t/(MAX_T - MIN_T)); 
 		if ( nc > frame_iter){
-			write_timestep(frame_iter, t, H_new);
+			write_timestep(frame_iter, t, H_new, output_directory);
 			frame_iter += 1;
 		}
 

@@ -13,7 +13,10 @@
 	Parallel Scientific Computing 001C 1192 
 
 """
+# internal
+import sys
 
+# external
 import numpy as np
 import pandas as pd
 import glob
@@ -22,11 +25,20 @@ import glob
 # Settings
 #
 
-TRIAL = 3
+#TRIAL = 3
 
-HT_FOLDER_PATH = "../output_%s/timesteps/*.csv" % TRIAL
-XS_FPATH = "../output_%s/xs.csv" % TRIAL
-YS_FPATH = "../output_%s/ys.csv" % TRIAL
+#HT_FOLDER_PATH = "../output_%s/timesteps/*.csv" % TRIAL
+#XS_FPATH = "../output_%s/xs.csv" % TRIAL
+#YS_FPATH = "../output_%s/ys.csv" % TRIAL
+
+output_directory_name = sys.argv[1]
+
+HT_FOLDER_PATH = "../output/%s/timesteps/*.csv" % output_directory_name
+XS_FPATH = "../output/%s/xs.csv" % output_directory_name
+YS_FPATH = "../output/%s/ys.csv" % output_directory_name
+
+OUTPUT_ANIMATION_FNAME = str('../output/%s/shallow_water_animation.mp4' % (output_directory_name))
+
 
 
 #
@@ -105,7 +117,7 @@ if __name__ == "__main__":
 	#
 	# settings
 	#
-	OUTPUT_ANIMATION_FNAME = str('../output_%s/shallow_water_animation_%s.mp4' % (TRIAL, TRIAL))
+	#OUTPUT_ANIMATION_FNAME = str('../output_%s/shallow_water_animation_%s.mp4' % (TRIAL, TRIAL))
 	
 	# display animation file name
 	print(OUTPUT_ANIMATION_FNAME)
