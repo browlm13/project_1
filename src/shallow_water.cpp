@@ -49,7 +49,7 @@ const bool MEASURE_CONVERGENCE = 0;
 
 ////
 // CFL Condition
-const double CFL = 0.01;
+const double CFL = 0.001;
 
 /////
 // Mesh Settings
@@ -67,15 +67,15 @@ const double MAX_T = 10.0;
 
 // Mesh Size -- x,y
 
-const int NX = 100;
-const int NY = 100;
+const int NX = 200;
+const int NY = 200;
 
 /////
 // Forcing Function Settings
 
 double fh(double t, double x, double y){ 	// <cmath> for exp, pow
-	//return 0.0;
-	return exp(-15.0*pow((t-1.5),2));
+	return 0.0;
+	//return exp(-15.0*pow((t-1.5),2));
 }
 
 double fu(double t, double x, double y){
@@ -90,8 +90,8 @@ double fv(double t, double x, double y){
 // Wave Speed
 
 double c(double x, double y){				// <cmath> for cos, pow
-	//return 1.0;
-	return 0.75 + pow(cos(2*PI*x), 2)*pow(cos(PI*y), 2); //max speed (1.75)
+	return 1.0;
+	//return 0.75 + pow(cos(2*PI*x), 2)*pow(cos(PI*y), 2); //max speed (1.75)
 }
 
 /////
